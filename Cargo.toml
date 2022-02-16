@@ -4,5 +4,6 @@ version = "0.1.0"
 authors = ["Michael Connor Buchan <mikey@blindcomputing.org>"]
 description = "Rust implementation of the Speech Synthesis Interface Protocol"
 license = "MIT"
+edition = "2021"
 
 [dependencies]
