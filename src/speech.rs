@@ -10,7 +10,7 @@ pub struct Speech<'a>(Cow<'a, str>);
 impl<'a> From<&'a str> for Speech<'a> {
     fn from(s: &'a str) -> Self {
         // str::lines() splits by either '\n' or "\r\n", we only want the latter
-        let needs_replace = s.split("\r\n").any(|l| l.starts_with("."));
+        let needs_replace = s.split("\r\n").any(|l| l.starts_with('.'));
         if needs_replace {
             Self(Cow::Owned(s.replace("\r\n.", "\r\n..")))
         } else {

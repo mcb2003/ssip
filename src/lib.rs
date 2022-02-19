@@ -1,5 +1,7 @@
 mod command;
 pub use command::Command;
+mod set_param;
+pub use set_param::SetParam;
 mod speech;
 pub use speech::Speech;
 

@@ -1,6 +1,6 @@
 use std::fmt;
 
-use super::{ClientId, Speech};
+use super::{ClientId, GetParam, SetParam, Speech};
 
 #[derive(Clone, Debug)]
 pub enum Command<'a> {
@@ -11,6 +11,10 @@ pub enum Command<'a> {
     Cancel(ClientId),
     Pause(ClientId),
     Resume(ClientId),
+    Set {
+        client: ClientId,
+        param: SetParam<'a>,
+    },
 }
 
 impl fmt::Display for Command<'_> {
@@ -24,6 +28,7 @@ impl fmt::Display for Command<'_> {
             Self::Cancel(id) => write!(f, "cancel {}\r\n", id),
             Self::Pause(id) => write!(f, "pause {}\r\n", id),
             Self::Resume(id) => write!(f, "resume {}\r\n", id),
+            Self::Set { client, param } => write!(f, "set {} {}\r\n", client, param),
         }
     }
 }
@@ -31,6 +36,7 @@ impl fmt::Display for Command<'_> {
 #[cfg(test)]
 mod tests {
     use super::*;
+    use crate::Priority;
 
     #[test]
     fn test_speak_display() {
@@ -90,5 +96,15 @@ mod tests {
         assert_eq!(cmd.to_string(), "resume self\r\n");
         let cmd = Command::Resume(ClientId::Id(123));
         assert_eq!(cmd.to_string(), "resume 123\r\n");
+    }
+
+    #[test]
+    fn test_set() {
+        // We don't test all possibilities here, since they're done in the tests for Param
+        let cmd = Command::Set {
+            client: ClientId::Self_,
+            param: SetParam::Priority(Priority::Message),
+        };
+        assert_eq!(cmd.to_string(), "set self priority message\r\n");
     }
 }
