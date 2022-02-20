@@ -1,6 +1,6 @@
 use std::fmt;
 
-use super::{ClientId, GetParam, SetParam, Speech};
+use super::{ClientId, GetParam, ListParam, SetParam, Speech};
 
 #[derive(Clone, Debug)]
 pub enum Command<'a> {
@@ -16,6 +16,7 @@ pub enum Command<'a> {
         param: SetParam<'a>,
     },
     Get(GetParam),
+    List(ListParam),
 }
 
 impl fmt::Display for Command<'_> {
@@ -31,6 +32,7 @@ impl fmt::Display for Command<'_> {
             Self::Resume(id) => write!(f, "resume {}\r\n", id),
             Self::Set { client, param } => write!(f, "set {} {}\r\n", client, param),
             Self::Get(param) => write!(f, "get {}\r\n", param),
+            Self::List(param) => write!(f, "list {}\r\n", param),
         }
     }
 }
@@ -114,5 +116,11 @@ mod tests {
     fn test_get() {
         let cmd = Command::Get(GetParam::OutputModule);
         assert_eq!(cmd.to_string(), "get output_module\r\n");
+    }
+
+    #[test]
+    fn test_list() {
+        let cmd = Command::List(ListParam::OutputModules);
+        assert_eq!(cmd.to_string(), "list output_modules\r\n");
     }
 }
