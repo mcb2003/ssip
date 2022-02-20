@@ -15,6 +15,7 @@ pub enum Command<'a> {
         client: ClientId,
         param: SetParam<'a>,
     },
+    Get(GetParam),
 }
 
 impl fmt::Display for Command<'_> {
@@ -29,6 +30,7 @@ impl fmt::Display for Command<'_> {
             Self::Pause(id) => write!(f, "pause {}\r\n", id),
             Self::Resume(id) => write!(f, "resume {}\r\n", id),
             Self::Set { client, param } => write!(f, "set {} {}\r\n", client, param),
+            Self::Get(param) => write!(f, "get {}\r\n", param),
         }
     }
 }
@@ -106,5 +108,11 @@ mod tests {
             param: SetParam::Priority(Priority::Message),
         };
         assert_eq!(cmd.to_string(), "set self priority message\r\n");
+    }
+
+    #[test]
+    fn test_get() {
+        let cmd = Command::Get(GetParam::OutputModule);
+        assert_eq!(cmd.to_string(), "get output_module\r\n");
     }
 }
